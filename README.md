@@ -122,4 +122,28 @@ Core entry point: `org.rubigdata.RUBigDataApp` (Scala/Spark).
 
 - `src/main/scala/org/rubigdata/RUBigDataApp.scala` – Spark app entry; modes & regex logic  
 - `Big_Data_project.pdf` – project report (methods, runs, results)  
-- `README.md` – this file  
+- `README.md` – this file
+
+---
+
+## 🐳 Running with Docker
+
+The experiments were executed on a **Docker container** provisioned with Spark and the required dependencies.  
+Instead of manually copying jars and datasets, the WARC files and the assembled fat-jar were **mounted into the container** at runtime.
+
+Example workflow:
+
+```bash
+# build the fat-jar locally
+sbt clean assembly
+
+# run Spark inside a container with project files mounted
+docker run --rm -it \
+  -v $(pwd)/target/scala-2.12:/app \
+  -v $(pwd)/data:/data \
+  bde2020/spark-master:3.1.1 \
+  spark-submit \
+    --class org.rubigdata.RUBigDataApp \
+    /app/RUBigDataApp-assembly-1.0.jar \
+    --mode any
+```
